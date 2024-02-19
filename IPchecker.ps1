@@ -13,12 +13,26 @@ if(!(Test-Path $IP_FILE_PATH)){
 $previousGlobalIP = (Get-Content $IP_FILE_PATH -Encoding UTF8)
 
 if(!($presentGlobalIP -eq $previousGlobalIP)){
-	$Toast = [Windows.UI.Notifications.ToastTemplateType, Windows.UI.Notifications, ContentType = WindowsRuntime]::ToastText02
-	$ToastContent = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::GetTemplateContent($Toast)
-	$ToastContent.SelectSingleNode('//text[@id="1"]').InnerText = 'グローバルIPアドレスに変更がありました'
-	$ToastContent.SelectSingleNode('//text[@id="2"]').InnerText = $presentGlobalIP
+	$xml = @"
+	<toast>
+		<visual>
+			<binding template="ToastGeneric">
+				<text>グローバルIPアドレスに変更がありました</text>
+				<text>$presentGlobalIP </text>
+			</binding>
+		</visual>
+
+		<actions>
+			<action content="IPを表示" activationType="protocol" arguments="https://ipinfo.io/ip" />
+		</actions>
+
+	</toast>
+"@
+
+	$XmlDocument = [Windows.Data.Xml.Dom.XmlDocument, Windows.Data.Xml.Dom.XmlDocument, ContentType = WindowsRuntime]::New()
+	$XmlDocument.loadXml($xml)
 	$AppId = '{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\WindowsPowerShell\v1.0\powershell.exe'
-	[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppId).Show($ToastContent)
+	[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]::CreateToastNotifier($AppId).Show($XmlDocument)
 
 	Set-Content -Path $IP_FILE_PATH -Value $presentGlobalIP
 }
