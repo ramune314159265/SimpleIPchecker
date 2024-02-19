@@ -13,4 +13,6 @@ $previousGlobalIP = (Get-Content $IP_FILE_PATH -Encoding UTF8)
 
 if(!($presentGlobalIP -eq $previousGlobalIP)){
 	Write-Output a
+
+	Set-Content -Path $IP_FILE_PATH -Value $presentGlobalIP
 }
