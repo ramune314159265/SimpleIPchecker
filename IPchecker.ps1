@@ -1,4 +1,4 @@
-﻿$OutputEncoding = [Text.UTF8Encoding]::UTF8
+$OutputEncoding = [Text.UTF8Encoding]::UTF8
 $IP_FILE_PATH = Join-Path $env:TEMP '/globalip.txt'
 
 $presentGlobalIP = (Invoke-WebRequest https://ipinfo.io/ip).content
@@ -12,7 +12,7 @@ if(!(Test-Path $IP_FILE_PATH)){
 
 $previousGlobalIP = (Get-Content $IP_FILE_PATH -Encoding UTF8)
 
-if(!($presentGlobalIP -eq $previousGlobalIP)){
+if($presentGlobalIP -ne $previousGlobalIP){
 	$xml = @"
 	<toast>
 		<visual>
