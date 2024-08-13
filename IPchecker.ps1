@@ -1,4 +1,4 @@
-$OutputEncoding = [Text.UTF8Encoding]::UTF8
+﻿$OutputEncoding = [Text.UTF8Encoding]::UTF8
 $IP_FILE_PATH = Join-Path $env:TEMP '/globalip.txt'
 
 $presentGlobalIP = (Invoke-WebRequest https://ipinfo.io/ip).content
